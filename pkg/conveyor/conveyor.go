@@ -6,9 +6,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/MChorfa/conveyor/pkg/conveyor/provider"
-	"github.com/MChorfa/conveyor/pkg/conveyor/storage"
-	"github.com/MChorfa/conveyor/pkg/conveyor/types"
+	"github.com/MChorfa/conveyor-cli/pkg/conveyor/provider"
+	"github.com/MChorfa/conveyor-cli/pkg/conveyor/storage"
+	"github.com/MChorfa/conveyor-cli/pkg/conveyor/types"
 	"github.com/google/uuid"
 )
 

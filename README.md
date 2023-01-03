@@ -15,7 +15,7 @@ https://www.atlassian.com/git/tutorials/git-forks-and-upstreams
 
 ```shell
 # initialize the project
-go mod init https://github.com/MChorfa/conveyor-cli
+go mod init github.com/MChorfa/conveyor-cli
 go mod tidy
 # open project in VSCode
 code .

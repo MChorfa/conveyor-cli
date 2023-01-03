@@ -3,7 +3,7 @@ package provider
 import (
 	"log"
 
-	"github.com/MChorfa/conveyor/pkg/conveyor/types"
+	"github.com/MChorfa/conveyor-cli/pkg/conveyor/types"
 	"github.com/xanzy/go-gitlab"
 )
 

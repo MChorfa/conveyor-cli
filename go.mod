@@ -1,4 +1,4 @@
-module github.com/MChorfa/conveyor
+module github.com/MChorfa/conveyor-cli
 
 go 1.19
 
@@ -6,7 +6,7 @@ require (
 	dagger.io/dagger v0.4.2
 	github.com/Azure/azure-sdk-for-go/sdk/storage/azblob v0.6.1
 	github.com/carolynvs/magex v0.9.0
-	github.com/google/uuid v1.1.2
+	github.com/google/uuid v1.3.0
 	github.com/rs/zerolog v1.28.0
 	github.com/spf13/cobra v1.6.1
 	github.com/spf13/pflag v1.0.5
@@ -17,7 +17,6 @@ require (
 
 require (
 	github.com/Azure/azure-sdk-for-go/sdk/azcore v1.1.4 // indirect
-	github.com/Azure/azure-sdk-for-go/sdk/azidentity v1.2.0 // indirect
 	github.com/Azure/azure-sdk-for-go/sdk/internal v1.0.1 // indirect
 	github.com/Khan/genqlient v0.5.0 // indirect
 	github.com/adrg/xdg v0.4.0 // indirect
@@ -33,7 +32,7 @@ require (
 	github.com/hashicorp/go-retryablehttp v0.7.1 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/iancoleman/strcase v0.2.0 // indirect
-	github.com/inconshreveable/mousetrap v1.1.0 // indirect
+	github.com/inconshreveable/mousetrap v1.0.1 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/magefile/mage v1.13.0 // indirect
 	github.com/magiconair/properties v1.8.6 // indirect

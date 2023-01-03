@@ -6,8 +6,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/MChorfa/conveyor/pkg/conveyor"
-	"github.com/MChorfa/conveyor/pkg/conveyor/types"
+	"github.com/MChorfa/conveyor-cli/pkg/conveyor"
+	"github.com/MChorfa/conveyor-cli/pkg/conveyor/types"
 	"github.com/google/uuid"
 	"github.com/rs/zerolog"
 	"github.com/spf13/cobra"

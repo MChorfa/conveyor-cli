@@ -12,7 +12,7 @@ import (
 
 	"github.com/Azure/azure-sdk-for-go/sdk/storage/azblob/blockblob"
 	"github.com/Azure/azure-sdk-for-go/sdk/storage/azblob/container"
-	"github.com/MChorfa/conveyor/pkg/conveyor/types"
+	"github.com/MChorfa/conveyor-cli/pkg/conveyor/types"
 )
 
 type CAZStorage struct {
