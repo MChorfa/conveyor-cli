@@ -1,0 +1,33 @@
+kind: Configuration
+apiversion: conveyor.io/v1alpha1
+metadata:
+    name: conveyorConfig
+    namespace: security
+    labels: {}
+    annotations: {}
+spec:
+    pipelineRunID: 12345
+    projectID: 12345
+    projectName: MyConveyor
+    refName: main
+    commitHash: ""
+    storage:
+        storageType: azure
+        storageToken: ""
+        storageAccountName: ""
+        storageContainerName: ""
+    provider:
+        providerType: github
+        providerApiURL: "https://api.github.com/"
+        providerToken: ""
+    tracing:
+        samplingRate: ""
+        stdout: false
+        zipkin:
+            endpointAddress: ""
+        otel:
+            protocol: ""
+            endpointAddress: ""
+            isSecure: true
+    metric:
+        enabled: true
