@@ -88,7 +88,7 @@ goreleaser release --snapshot --rm-dist
 
 # The minimum permissions the GITHUB_TOKEN should have to run this are write:packages
 export GITHUB_TOKEN="YOUR_GH_TOKEN"
-git tag -a v0.0.1 -m "Pre release"
+git tag -a v0.0.1-alpha -m "Alpha pre-release"
 git push origin --tags
 goreleaser release
 ```
