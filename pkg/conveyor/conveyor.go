@@ -16,6 +16,7 @@ import (
 type Conveyor struct {
 	ID            uuid.UUID
 	CreatedAt     time.Time
+	Nonce         string
 	Provider      provider.IProvider
 	Storage       storage.IStorage
 	Configuration *types.Configuration
@@ -25,6 +26,7 @@ func NewConveyor(cfg *types.Configuration) *Conveyor {
 	return &Conveyor{
 		ID:            uuid.New(),
 		CreatedAt:     time.Now(),
+		Nonce:         "nonce-123564756780tyrgfdcbvxg",
 		Configuration: cfg,
 	}
 }

@@ -2,14 +2,17 @@ package types
 
 import (
 	"bytes"
+	"time"
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 type Artifact struct {
-	Id      int
-	Name    string
-	Payload *bytes.Reader
+	Id        int
+	Name      string
+	Payload   *bytes.Reader
+	Nonce     string
+	CreatedAt time.Time
 }
 
 // TracingSpec defines Tracing configurations.
@@ -85,17 +88,18 @@ const (
 
 // Configuration specs
 type ConfigurationSpec struct {
-	PipelineRunID int           `json:"pipelineRunID" yaml:"pipelineRunID" mapstructure:"PIPELINE_RUN_ID"`
-	ProjectID     int           `json:"projectID" yaml:"projectID" mapstructure:"PROJECT_ID"`
-	ProjectName   string        `json:"projectName" yaml:"projectName" mapstructure:"PROJECT_NAME"`
-	RefName       string        `json:"refName" yaml:"refName" mapstructure:"REF_NAME"`
-	OwnerName     string        `json:"ownerName,omitempty" yaml:"ownerName,omitempty"  mapstructure:"OWNER_NAME"`
-	CommitHash    string        `json:"commitHash" yaml:"commitHash" mapstructure:"COMMIT_HASH"`
-	Storage       *StorageSpec  `json:"storage" yaml:"storage"`
-	Provider      *ProviderSpec `json:"provider" yaml:"provider"`
-	TracingSpec   TracingSpec   `json:"tracing,omitempty" yaml:"tracing,omitempty"`
-	MetricSpec    MetricSpec    `json:"metric,omitempty" yaml:"metric,omitempty"`
-	LoggingSpec   LoggingSpec   `json:"logging,omitempty" yaml:"logging,omitempty"`
+	PipelineRunID      int           `json:"pipelineRunID" yaml:"pipelineRunID" mapstructure:"PIPELINE_RUN_ID"`
+	ProjectID          int           `json:"projectID" yaml:"projectID" mapstructure:"PROJECT_ID"`
+	ProjectName        string        `json:"projectName" yaml:"projectName" mapstructure:"PROJECT_NAME"`
+	RefName            string        `json:"refName" yaml:"refName" mapstructure:"REF_NAME"`
+	OwnerName          string        `json:"ownerName,omitempty" yaml:"ownerName,omitempty"  mapstructure:"OWNER_NAME"`
+	CommitHash         string        `json:"commitHash" yaml:"commitHash" mapstructure:"COMMIT_HASH"`
+	StagesAndJobsNames []string      `json:"stagesAndJobsNames" yaml:"stagesAndJobsNames" mapstructure:"STAGES_AND_JOBS_NAMES"`
+	Storage            *StorageSpec  `json:"storage" yaml:"storage"`
+	Provider           *ProviderSpec `json:"provider" yaml:"provider"`
+	TracingSpec        TracingSpec   `json:"tracing,omitempty" yaml:"tracing,omitempty"`
+	MetricSpec         MetricSpec    `json:"metric,omitempty" yaml:"metric,omitempty"`
+	LoggingSpec        LoggingSpec   `json:"logging,omitempty" yaml:"logging,omitempty"`
 }
 
 // Configuration that represents Conveyor config object.

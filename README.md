@@ -63,6 +63,9 @@ go run main.go \
 --pipeline-run-id 124 \
 --project-id 123 \
 --project-name "" \
+--stage-job-name generate-dsl \
+--stage-job-name generate-otm \
+--stage-job-name semgrep-sast \
 --provider-api-url "https://gitlab.youcompany.com/api/v4" \
 --provider-token "000" \
 --provider-type "gitlab" \
@@ -73,3 +76,19 @@ go run main.go \
 --storage-container-name "azure"  
 ```
 
+## Release
+
+```sh
+# https://goreleaser.com/quick-start/
+
+brew install goreleaser/tap/goreleaser
+goreleaser init
+goreleaser build --single-target --snapshot --rm-dist
+goreleaser release --snapshot --rm-dist
+
+# The minimum permissions the GITHUB_TOKEN should have to run this are write:packages
+export GITHUB_TOKEN="YOUR_GH_TOKEN"
+git tag -a v0.0.1 -m "Pre release"
+git push origin --tags
+goreleaser release
+```

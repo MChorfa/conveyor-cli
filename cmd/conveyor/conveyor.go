@@ -33,19 +33,21 @@ func Execute() {
 }
 
 func NewRootCommand() *cobra.Command {
-	pipelineRunID := 000
-	projectID := 000
-	projectName := ""
-	refName := ""
-	ownerName := ""
-	commitHash := ""
-	providerType := ""
-	providerAPIUrl := ""
-	providerToken := ""
-	storageType := ""
-	storageToken := ""
-	storageAccountName := ""
-	storageContainerName := ""
+	var stagesAndJobsNames []string = []string{}
+	var pipelineRunID int = 0
+	var projectID int = 0
+	var projectName string = ""
+	var refName string = ""
+	var ownerName string = ""
+	var commitHash string = ""
+	var providerType string = ""
+	var providerAPIUrl string = ""
+	var providerToken string = ""
+	var storageType string = ""
+	var storageToken string = ""
+	var storageAccountName string = ""
+	var storageContainerName string = ""
+
 	rootCmd := &cobra.Command{
 		Use:     "conveyor",
 		Version: version,
@@ -55,7 +57,7 @@ func NewRootCommand() *cobra.Command {
 			return initConfigWithViper(cmd)
 		},
 		Run: func(cmd *cobra.Command, args []string) {
-			config := initConfigFromFlags(pipelineRunID, projectID, projectName, refName, ownerName, commitHash,
+			config := initConfigFromFlags(pipelineRunID, projectID, projectName, refName, ownerName, commitHash, stagesAndJobsNames,
 				types.RemoteProviderType(providerType), providerAPIUrl, providerToken,
 				types.RemoteStorageType(storageType), storageToken, storageAccountName, storageContainerName)
 			err := handleConveyrCmd(config)
@@ -73,6 +75,7 @@ func NewRootCommand() *cobra.Command {
 	rootCmd.Flags().StringVarP(&refName, "ref-name", "", "main", "What is the project ref name?")
 	rootCmd.Flags().StringVarP(&ownerName, "owner-name", "", "conveyor", "What is the project owner name?")
 	rootCmd.Flags().StringVarP(&commitHash, "commit-hash", "", "000", "What is the latest commit hash?")
+	rootCmd.Flags().StringArrayVarP(&stagesAndJobsNames, "stage-job-name", "", []string{}, "What is the stages or jobs names?")
 	rootCmd.Flags().StringVarP(&providerType, "provider-type", "", "gitlab", "What is the provider type [Gitlab | Github]?")
 	rootCmd.Flags().StringVarP(&providerAPIUrl, "provider-api-url", "", "https://gitlab.youcompany.com/api/v4", "What is the provider api url?")
 	rootCmd.Flags().StringVarP(&providerToken, "provider-token", "", "000", "What is the provider api token?")
@@ -107,7 +110,7 @@ func initLogging(name, version string) {
 }
 
 func initConfigFromFlags(pipelineRunID int, projectID int, projectName string, refName string, ownerName string, commitHash string,
-	providerType types.RemoteProviderType, providerAPIUrl string, providerToken string,
+	stagesAndJobsNames []string, providerType types.RemoteProviderType, providerAPIUrl string, providerToken string,
 	storageType types.RemoteStorageType, storageToken string, storageAccountName string, storageContainerName string) *types.Configuration {
 	config := &types.Configuration{}
 	config.APIVersion = "conveyor.io/v1alpha1"
@@ -119,6 +122,7 @@ func initConfigFromFlags(pipelineRunID int, projectID int, projectName string, r
 	config.Spec.RefName = refName
 	config.Spec.OwnerName = ownerName
 	config.Spec.CommitHash = commitHash
+	config.Spec.StagesAndJobsNames = stagesAndJobsNames
 	config.Spec.Provider = &types.ProviderSpec{
 		ProviderType:   providerType,
 		ProviderApiURL: providerAPIUrl,
