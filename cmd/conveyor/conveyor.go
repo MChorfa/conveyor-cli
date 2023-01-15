@@ -92,7 +92,7 @@ func NewRootCommand() *cobra.Command {
 					StorageType:          types.RemoteStorageType(storageType),
 					StorageToken:         storageToken,
 					StorageAccountName:   storageAccountName,
-					StorageContainerName: storageAccountName,
+					StorageContainerName: storageContainerName,
 				})
 			err := handleConveyrCmd(config)
 			if err != nil {

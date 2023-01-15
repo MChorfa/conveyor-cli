@@ -17,6 +17,9 @@ concurrency:
   group: '${{ github.workflow }} @ ${{ github.event.pull_request.head.label || github.head_ref || github.ref }}'
   cancel-in-progress: true
 
+env:
+  GRYPE_MATCH_GOLANG_USING_CPES: false
+
 jobs:
   sbom-stage:
       runs-on: ubuntu-latest
@@ -56,7 +59,7 @@ jobs:
             name: sbom-stage
             path: |
               "/tmp/sbom-action-*/conveyor-cli-sbom-stage.spdx.json"
-              "/tmp/sbom-scan-*/*"
+
 
 
             
