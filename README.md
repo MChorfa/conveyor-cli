@@ -1,5 +1,6 @@
-## ---- POC --- DO NOT USE ----
-# conveyor-cli
+# ---- POC --- DO NOT USE ----
+
+## conveyor-cli
 
 conveyor-cli for artifacts
 
@@ -97,7 +98,6 @@ git push origin --tags
 goreleaser release --rm-dist
 ```
 
-
 ## CI Examples
 
 ### Gitlabci
@@ -129,7 +129,7 @@ conveyor:
       --pipeline-run-id $CI_PIPELINE_ID \
       --project-id $CI_PROJECT_ID \
       --project-name "$CI_PROJECT_NAME" \
-      --stage-job-name semgrep-sast \
+      --job-name semgrep-sast \
       --provider-api-url "$CI_API_V4_URL" \
       --provider-token "${CONVEYOR_PROVIDER_TOKEN}" \
       --provider-type "gitlab" \
@@ -177,7 +177,7 @@ jobs:
             --pipeline-id $GITHUB_RUN_ID \
             --project-id $GITHUB_REPOSITORY_ID \
             --project-name "$GITHUB_REPOSITORY" \
-            --stage-job-name sbom-stage \
+            --job-name sbom-stage \ 
             --provider-api-url "https://api.github.com" \
             --provider-token "${CONVEYOR_PROVIDER_TOKEN}" \
             --provider-type "github" \

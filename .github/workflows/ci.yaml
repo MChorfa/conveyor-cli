@@ -88,7 +88,7 @@ jobs:
             --pipeline-id $GITHUB_RUN_ID \
             --project-id $GITHUB_REPOSITORY_ID \
             --project-name "$GITHUB_REPOSITORY" \
-            --stage-job-name sbom-stage \
+            --job-name sbom-stage \
             --provider-api-url "https://api.github.com" \
             --provider-token "${CONVEYOR_PROVIDER_TOKEN}" \
             --provider-type "github" \
