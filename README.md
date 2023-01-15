@@ -104,6 +104,10 @@ goreleaser release --rm-dist
 
 ```yaml
 
+stages:
+- conveyor
+...
+
 conveyor:
   variables:
     CONVEYOR_PROVIDER_TOKEN: "$CONVEYOR_PROVIDER_TOKEN"
@@ -137,5 +141,49 @@ conveyor:
 
 ```
 
-
 ### GithubAction
+
+```yaml
+env:
+  GRYPE_MATCH_GOLANG_USING_CPES: false
+  CONVEYOR_PROVIDER_TOKEN: "$CONVEYOR_PROVIDER_TOKEN"
+  CONVEYOR_STORAGE_TOKEN: "$CONVEYOR_STORAGE_TOKEN"
+  CONVEYOR_STORAGE_ACCOUNT_NAME: "$CONVEYOR_STORAGE_ACCOUNT_NAME"
+  CONVEYOR_STORAGE_CONTAINER_NAME: "$CONVEYOR_STORAGE_CONTAINER_NAME" 
+...
+
+jobs:
+  conveyor:
+      runs-on: ubuntu-latest
+      steps:
+        - name: Checkout
+          uses: actions/checkout@v3
+          with:
+            fetch-depth: 0
+        
+        - name: Set up Go
+          uses: actions/setup-go@v3
+          with:
+            go-version: '>=1.19'
+        
+        - name: Get Conveyor
+          run: go install github.com/MChorfa/conveyor-cli@latest
+
+        - name: Run Conveyor
+          run: |
+            conveyor-cli conveyor \
+            --commit-hash "$GITHUB_SHA" \
+            --owner-name "$GITHUB_REPOSITORY_OWNER" \
+            --pipeline-id $GITHUB_RUN_ID \
+            --project-id $GITHUB_REPOSITORY_ID \
+            --project-name "$GITHUB_REPOSITORY" \
+            --stage-job-name sbom-stage \
+            --provider-api-url "https://api.github.com" \
+            --provider-token "${CONVEYOR_PROVIDER_TOKEN}" \
+            --provider-type "github" \
+            --ref-name "$GITHUB_REF_NAME" \
+            --storage-token "${CONVEYOR_STORAGE_TOKEN}" \
+            --storage-type "azure" \
+            --storage-account-name "${CONVEYOR_STORAGE_ACCOUNT_NAME}" \
+            --storage-container-name "${CONVEYOR_STORAGE_CONTAINER_NAME}"
+```
