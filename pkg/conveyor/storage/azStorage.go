@@ -1,12 +1,11 @@
 package storage
 
 import (
-	"bytes"
 	"compress/gzip"
 	"context"
+	"crypto/sha256"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"os"
 	"path/filepath"
 
@@ -29,18 +28,22 @@ func (cAZStorage *CAZStorage) HandleArtifacts(artifacts []*types.Artifact) {
 	for _, artifact := range artifacts {
 
 		if artifact != nil && artifact.Payload != nil {
-			// compress data
-			data, err := ioutil.ReadAll(artifact.Payload)
+			// read artifact data
+			artifactData, err := ioutil.ReadAll(artifact.Payload)
 			handleError(err)
-			compressedData, compressedDataErr := gZipData(data)
-			handleError(compressedDataErr)
+			// Hash filemane
+			buildFileName := fmt.Sprintf("%s-%d", artifact.Name, artifact.Id)
+			hash := sha256.New()
+			hash.Write([]byte(buildFileName))
+			hashFileName := hash.Sum(nil)
 			// Build File object
-			finalFileName := fmt.Sprintf("%s-%d.gz", artifact.Name, artifact.Id)
+			finalFileName := fmt.Sprintf("%x.gz", hashFileName)
 			transitionFilePath := filepath.Join(transition_dir, finalFileName)
 			transitionFile, err := os.Create(transitionFilePath)
 			handleError(err)
+			// compress file
 			w := gzip.NewWriter(transitionFile)
-			w.Write(compressedData)
+			w.Write(artifactData)
 			w.Close()
 			// Upload File
 			upload(cAZStorage.Configuration, transitionFile.Name(), finalFileName)
@@ -58,12 +61,6 @@ func NewCAZStorage(configuration *types.Configuration) IStorage {
 	return &CAZStorage{
 		Configuration: configuration,
 		Status:        "none",
-	}
-}
-
-func handleError(err error) {
-	if err != nil {
-		log.Fatal(err.Error())
 	}
 }
 
@@ -97,27 +94,5 @@ func upload(configuration *types.Configuration, blobFilePath string, blobFileNam
 			},
 		})
 	handleError(err)
-	_ = response // Avoid compiler's "declared and not used" error
-}
-
-func gZipData(data []byte) (compressedData []byte, err error) {
-	var b bytes.Buffer
-	gz := gzip.NewWriter(&b)
-
-	_, err = gz.Write(data)
-	if err != nil {
-		return
-	}
-
-	if err = gz.Flush(); err != nil {
-		return
-	}
-
-	if err = gz.Close(); err != nil {
-		return
-	}
-
-	compressedData = b.Bytes()
-
-	return
+	_ = response // Avoid compiler's "declared and not used" error | will be in future iterations
 }

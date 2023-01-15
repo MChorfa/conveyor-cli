@@ -26,7 +26,7 @@ func NewConveyor(cfg *types.Configuration) *Conveyor {
 	return &Conveyor{
 		ID:            uuid.New(),
 		CreatedAt:     time.Now(),
-		Nonce:         "nonce-123564756780tyrgfdcbvxg",
+		Nonce:         fmt.Sprintf("nonce-%v", uuid.New()),
 		Configuration: cfg,
 	}
 }
@@ -51,16 +51,19 @@ func (c *Conveyor) ProcessArtifact() error {
 }
 
 func getProvider(cfg *types.Configuration) (provider.IProvider, error) {
-	if strings.ToLower(string(cfg.Spec.Provider.ProviderType)) == "gitlab" {
+	if strings.EqualFold(strings.ToLower(string(cfg.Spec.Provider.ProviderType)), "gitlab") {
 		gitlab := provider.NewCGitlab(cfg)
 		return gitlab, nil
+	} else if strings.EqualFold(strings.ToLower(string(cfg.Spec.Provider.ProviderType)), "github") {
+		github := provider.NewCGithub(cfg)
+		return github, nil
 	} else {
 		return nil, fmt.Errorf("invalid provider type")
 	}
 }
 
 func getStorage(cfg *types.Configuration) (storage.IStorage, error) {
-	if strings.ToLower(string(cfg.Spec.Storage.StorageType)) == "azure" {
+	if strings.EqualFold(strings.ToLower(string(cfg.Spec.Storage.StorageType)), "azure") {
 		storage := storage.NewCAZStorage(cfg)
 		return storage, nil
 	} else {

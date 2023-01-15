@@ -6,7 +6,7 @@ metadata:
     labels: {}
     annotations: {}
 spec:
-    pipelineRunID: 12345
+    pipelineID: 12345
     projectID: 12345
     projectName: MyConveyor
     refName: main

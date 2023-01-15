@@ -23,6 +23,24 @@ var (
 	replaceHyphenWithCamelCase = false
 )
 
+type ConfigFromFlags struct {
+	JobsNames            []string
+	PipelineID           int
+	PipelineName         string
+	ProjectID            int
+	ProjectName          string
+	RefName              string
+	OwnerName            string
+	CommitHash           string
+	ProviderType         types.RemoteProviderType
+	ProviderAPIUrl       string
+	ProviderToken        string
+	StorageType          types.RemoteStorageType
+	StorageToken         string
+	StorageAccountName   string
+	StorageContainerName string
+}
+
 func Execute() {
 	initLogging(name, version)
 	cmd := NewRootCommand()
@@ -33,8 +51,9 @@ func Execute() {
 }
 
 func NewRootCommand() *cobra.Command {
-	var stagesAndJobsNames []string = []string{}
-	var pipelineRunID int = 0
+	var jobsNames []string = []string{}
+	var pipelineID int = 0
+	var pipelineName string = ""
 	var projectID int = 0
 	var projectName string = ""
 	var refName string = ""
@@ -57,9 +76,24 @@ func NewRootCommand() *cobra.Command {
 			return initConfigWithViper(cmd)
 		},
 		Run: func(cmd *cobra.Command, args []string) {
-			config := initConfigFromFlags(pipelineRunID, projectID, projectName, refName, ownerName, commitHash, stagesAndJobsNames,
-				types.RemoteProviderType(providerType), providerAPIUrl, providerToken,
-				types.RemoteStorageType(storageType), storageToken, storageAccountName, storageContainerName)
+			config := initConfigFromFlags(
+				&ConfigFromFlags{
+					PipelineID:           pipelineID,
+					PipelineName:         pipelineName,
+					JobsNames:            jobsNames,
+					ProjectID:            projectID,
+					ProjectName:          projectName,
+					RefName:              refName,
+					OwnerName:            ownerName,
+					CommitHash:           commitHash,
+					ProviderType:         types.RemoteProviderType(providerType),
+					ProviderAPIUrl:       providerAPIUrl,
+					ProviderToken:        providerToken,
+					StorageType:          types.RemoteStorageType(storageType),
+					StorageToken:         storageToken,
+					StorageAccountName:   storageAccountName,
+					StorageContainerName: storageAccountName,
+				})
 			err := handleConveyrCmd(config)
 			if err != nil {
 				fmt.Printf("%v", err)
@@ -69,20 +103,21 @@ func NewRootCommand() *cobra.Command {
 		},
 	}
 
-	rootCmd.Flags().IntVarP(&pipelineRunID, "pipeline-run-id", "", 000, "What is the pipeline or the run id?")
-	rootCmd.Flags().IntVarP(&projectID, "project-id", "", 000, "What is the project id?")
-	rootCmd.Flags().StringVarP(&projectName, "project-name", "", "conveyor", "What is the project name?")
-	rootCmd.Flags().StringVarP(&refName, "ref-name", "", "main", "What is the project ref name?")
-	rootCmd.Flags().StringVarP(&ownerName, "owner-name", "", "conveyor", "What is the project owner name?")
-	rootCmd.Flags().StringVarP(&commitHash, "commit-hash", "", "000", "What is the latest commit hash?")
-	rootCmd.Flags().StringArrayVarP(&stagesAndJobsNames, "stage-job-name", "", []string{}, "What is the stages or jobs names?")
-	rootCmd.Flags().StringVarP(&providerType, "provider-type", "", "gitlab", "What is the provider type [Gitlab | Github]?")
-	rootCmd.Flags().StringVarP(&providerAPIUrl, "provider-api-url", "", "https://gitlab.youcompany.com/api/v4", "What is the provider api url?")
-	rootCmd.Flags().StringVarP(&providerToken, "provider-token", "", "000", "What is the provider api token?")
-	rootCmd.Flags().StringVarP(&storageType, "storage-type", "", "azure", "What is the storage type?")
-	rootCmd.Flags().StringVarP(&storageToken, "storage-token", "", "000", "What is the storage token?")
-	rootCmd.Flags().StringVarP(&storageAccountName, "storage-account-name", "", "dev0relay0data", "What is the storage account name?")
-	rootCmd.Flags().StringVarP(&storageContainerName, "storage-container-name", "", "raw-data", "What is the storage container name?")
+	rootCmd.Flags().IntVar(&pipelineID, "pipeline-id", 000, "What is the pipeline id or workflow id if available?")
+	rootCmd.Flags().StringVar(&pipelineName, "pipeline-name", "", "What is the pipeline name  or workflow name if available?")
+	rootCmd.Flags().IntVar(&projectID, "project-id", 000, "What is the project id or repo id ?")
+	rootCmd.Flags().StringVar(&projectName, "project-name", "conveyor", "What is the project or repo name?")
+	rootCmd.Flags().StringVar(&refName, "ref-name", "main", "What is the project ref name or repo ref name?")
+	rootCmd.Flags().StringVar(&ownerName, "owner-name", "conveyor", "What is the project owner name or repo owner name?")
+	rootCmd.Flags().StringVar(&commitHash, "commit-hash", "", "What is the latest commit hash?")
+	rootCmd.Flags().StringArrayVar(&jobsNames, "job-name", []string{}, "What is the job name?")
+	rootCmd.Flags().StringVar(&providerType, "provider-type", "gitlab", "What is the provider type [Gitlab | Github]?")
+	rootCmd.Flags().StringVar(&providerAPIUrl, "provider-api-url", "https://gitlab.youcompany.com/api/v4", "What is the provider api url?")
+	rootCmd.Flags().StringVar(&providerToken, "provider-token", "000", "What is the provider api token?")
+	rootCmd.Flags().StringVar(&storageType, "storage-type", "azure", "What is the storage type?")
+	rootCmd.Flags().StringVar(&storageToken, "storage-token", "000", "What is the storage token?")
+	rootCmd.Flags().StringVar(&storageAccountName, "storage-account-name", "dev0relay0data", "What is the storage account name?")
+	rootCmd.Flags().StringVar(&storageContainerName, "storage-container-name", "raw-data", "What is the storage container name?")
 	return rootCmd
 }
 
@@ -109,30 +144,30 @@ func initLogging(name, version string) {
 	zerolog.SetGlobalLevel(zerolog.InfoLevel)
 }
 
-func initConfigFromFlags(pipelineRunID int, projectID int, projectName string, refName string, ownerName string, commitHash string,
-	stagesAndJobsNames []string, providerType types.RemoteProviderType, providerAPIUrl string, providerToken string,
-	storageType types.RemoteStorageType, storageToken string, storageAccountName string, storageContainerName string) *types.Configuration {
+func initConfigFromFlags(cfgFromFlags *ConfigFromFlags) *types.Configuration {
 	config := &types.Configuration{}
 	config.APIVersion = "conveyor.io/v1alpha1"
 	config.Kind = "Configuration"
 	config.SetName("conveyorConfig")
 	config.SetNamespace("conveyor")
-	config.Spec.PipelineRunID = pipelineRunID
-	config.Spec.ProjectID = projectID
-	config.Spec.RefName = refName
-	config.Spec.OwnerName = ownerName
-	config.Spec.CommitHash = commitHash
-	config.Spec.StagesAndJobsNames = stagesAndJobsNames
+	config.Spec.PipelineID = cfgFromFlags.PipelineID
+	config.Spec.PipelineName = cfgFromFlags.PipelineName
+	config.Spec.ProjectID = cfgFromFlags.ProjectID
+	config.Spec.ProjectName = cfgFromFlags.ProjectName
+	config.Spec.RefName = cfgFromFlags.RefName
+	config.Spec.OwnerName = cfgFromFlags.OwnerName
+	config.Spec.CommitHash = cfgFromFlags.CommitHash
+	config.Spec.JobsNames = cfgFromFlags.JobsNames
 	config.Spec.Provider = &types.ProviderSpec{
-		ProviderType:   providerType,
-		ProviderApiURL: providerAPIUrl,
-		ProviderToken:  providerToken,
+		ProviderType:   cfgFromFlags.ProviderType,
+		ProviderApiURL: cfgFromFlags.ProviderAPIUrl,
+		ProviderToken:  cfgFromFlags.ProviderToken,
 	}
 	config.Spec.Storage = &types.StorageSpec{
-		StorageType:          storageType,
-		StorageToken:         storageToken,
-		StorageAccountName:   storageAccountName,
-		StorageContainerName: storageContainerName,
+		StorageType:          cfgFromFlags.StorageType,
+		StorageToken:         cfgFromFlags.StorageToken,
+		StorageAccountName:   cfgFromFlags.StorageAccountName,
+		StorageContainerName: cfgFromFlags.StorageContainerName,
 	}
 
 	return config

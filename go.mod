@@ -6,12 +6,14 @@ require (
 	dagger.io/dagger v0.4.2
 	github.com/Azure/azure-sdk-for-go/sdk/storage/azblob v0.6.1
 	github.com/carolynvs/magex v0.9.0
+	github.com/google/go-github/v49 v49.1.0
 	github.com/google/uuid v1.3.0
 	github.com/rs/zerolog v1.28.0
 	github.com/spf13/cobra v1.6.1
 	github.com/spf13/pflag v1.0.5
 	github.com/spf13/viper v1.14.0
 	github.com/xanzy/go-gitlab v0.77.0
+	golang.org/x/oauth2 v0.0.0-20221014153046-6fdb5e3db783
 	k8s.io/apimachinery v0.26.0
 )
 
@@ -50,8 +52,8 @@ require (
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
 	github.com/subosito/gotenv v1.4.1 // indirect
 	github.com/vektah/gqlparser/v2 v2.5.1 // indirect
+	golang.org/x/crypto v0.0.0-20220525230936-793ad666bf5e // indirect
 	golang.org/x/net v0.3.1-0.20221206200815-1e63c2f08a10 // indirect
-	golang.org/x/oauth2 v0.0.0-20221014153046-6fdb5e3db783 // indirect
 	golang.org/x/sync v0.1.0 // indirect
 	golang.org/x/sys v0.3.0 // indirect
 	golang.org/x/text v0.5.0 // indirect

@@ -60,12 +60,12 @@ go build -o ./dist/conveyor -ldflags="-X 'github.com/MChorfa/conveyor-cli/cmd/co
 go run main.go \
 --commit-hash "" \
 --owner-name "" \
---pipeline-run-id 124 \
+--pipeline-id 124 \
 --project-id 123 \
 --project-name "" \
---stage-job-name generate-dsl \
---stage-job-name generate-otm \
---stage-job-name semgrep-sast \
+--job-name generate-dsl \
+--job-name generate-otm \
+--job-name semgrep-sast \
 --provider-api-url "https://gitlab.youcompany.com/api/v4" \
 --provider-token "000" \
 --provider-type "gitlab" \
@@ -88,7 +88,11 @@ goreleaser release --snapshot --rm-dist
 
 # The minimum permissions the GITHUB_TOKEN should have to run this are write:packages
 export GITHUB_TOKEN="YOUR_GH_TOKEN"
+
+git tag -d v0.0.1-alpha
+git push --delete origin v0.0.1-alpha
+
 git tag -a v0.0.1-alpha -m "Alpha pre-release"
 git push origin --tags
-goreleaser release
+goreleaser release --rm-dist
 ```

@@ -1,0 +1,49 @@
+name: 'Conveyor-CLI: CI'
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+  pull_request:
+
+permissions:
+  contents: read
+  # Needed for the 'trilom/file-changes-action' action
+  pull-requests: read
+
+# This allows a subsequently queued workflow run to interrupt previous runs
+concurrency:
+  group: '${{ github.workflow }} @ ${{ github.event.pull_request.head.label || github.head_ref || github.ref }}'
+  cancel-in-progress: true
+
+jobs:
+  sbom-genertion:
+      runs-on: ubuntu-latest
+      steps:
+        - name: Checkout
+          uses: actions/checkout@v3
+          with:
+            fetch-depth: 0
+        
+        - name: Set up Go
+          uses: actions/setup-go@v3
+          with:
+            go-version-file: go.mod
+            cache: true
+        
+        - name: build
+          run: go run mage.go build
+        
+        - name: sbom-genertion
+          uses: anchore/sbom-action@v0
+          with:
+            artifact-name: sbom.spdx
+        - run: |
+            mkdir -p ${{ github.workspace }}/artifact
+            cp sbom.spdx ${{ github.workspace }}/artifact/
+
+        - uses: actions/upload-artifact@v3
+          with:
+            name: sbom-genertion
+            path: ${{ github.workspace }}/artifact/**/*

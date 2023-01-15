@@ -81,25 +81,26 @@ type StorageSpec struct {
 const (
 	Gitlab  RemoteProviderType = "gitlab"
 	Github  RemoteProviderType = "github"
-	azure   RemoteStorageType  = "azure"
+	Azure   RemoteStorageType  = "azure"
 	AWSS3   RemoteStorageType  = "awss3"
 	MINIOS3 RemoteStorageType  = "minios3"
 )
 
 // Configuration specs
 type ConfigurationSpec struct {
-	PipelineRunID      int           `json:"pipelineRunID" yaml:"pipelineRunID" mapstructure:"PIPELINE_RUN_ID"`
-	ProjectID          int           `json:"projectID" yaml:"projectID" mapstructure:"PROJECT_ID"`
-	ProjectName        string        `json:"projectName" yaml:"projectName" mapstructure:"PROJECT_NAME"`
-	RefName            string        `json:"refName" yaml:"refName" mapstructure:"REF_NAME"`
-	OwnerName          string        `json:"ownerName,omitempty" yaml:"ownerName,omitempty"  mapstructure:"OWNER_NAME"`
-	CommitHash         string        `json:"commitHash" yaml:"commitHash" mapstructure:"COMMIT_HASH"`
-	StagesAndJobsNames []string      `json:"stagesAndJobsNames" yaml:"stagesAndJobsNames" mapstructure:"STAGES_AND_JOBS_NAMES"`
-	Storage            *StorageSpec  `json:"storage" yaml:"storage"`
-	Provider           *ProviderSpec `json:"provider" yaml:"provider"`
-	TracingSpec        TracingSpec   `json:"tracing,omitempty" yaml:"tracing,omitempty"`
-	MetricSpec         MetricSpec    `json:"metric,omitempty" yaml:"metric,omitempty"`
-	LoggingSpec        LoggingSpec   `json:"logging,omitempty" yaml:"logging,omitempty"`
+	PipelineID   int           `json:"pipelineID" yaml:"pipelineID" mapstructure:"PIPELINE_ID"`
+	PipelineName string        `json:"pipelineName" yaml:"pipelineName" mapstructure:"PIPELINE_NAME"`
+	ProjectID    int           `json:"projectID" yaml:"projectID" mapstructure:"PROJECT_ID"`
+	ProjectName  string        `json:"projectName" yaml:"projectName" mapstructure:"PROJECT_NAME"`
+	RefName      string        `json:"refName" yaml:"refName" mapstructure:"REF_NAME"`
+	OwnerName    string        `json:"ownerName,omitempty" yaml:"ownerName,omitempty"  mapstructure:"OWNER_NAME"`
+	CommitHash   string        `json:"commitHash" yaml:"commitHash" mapstructure:"COMMIT_HASH"`
+	JobsNames    []string      `json:"jobsNames" yaml:"jobsNames" mapstructure:"STAGES_AND_JOBS_NAMES"`
+	Storage      *StorageSpec  `json:"storage" yaml:"storage"`
+	Provider     *ProviderSpec `json:"provider" yaml:"provider"`
+	TracingSpec  TracingSpec   `json:"tracing,omitempty" yaml:"tracing,omitempty"`
+	MetricSpec   MetricSpec    `json:"metric,omitempty" yaml:"metric,omitempty"`
+	LoggingSpec  LoggingSpec   `json:"logging,omitempty" yaml:"logging,omitempty"`
 }
 
 // Configuration that represents Conveyor config object.
