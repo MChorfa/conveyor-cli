@@ -145,11 +145,15 @@ conveyor:
 
 ```yaml
 env:
-  GRYPE_MATCH_GOLANG_USING_CPES: false
-  CONVEYOR_PROVIDER_TOKEN: "$CONVEYOR_PROVIDER_TOKEN"
-  CONVEYOR_STORAGE_TOKEN: "$CONVEYOR_STORAGE_TOKEN"
+  # see: [secrets](https://docs.github.com/en/actions/security-guides/encrypted-secrets)
+  # Personal Access Token  | personal use only, recommended to use GITHUB_TOKEN
+  CONVEYOR_PROVIDER_TOKEN: ${{ secrets.CONVEYOR_PROVIDER_TOKEN }}
+  CONVEYOR_STORAGE_TOKEN: ${{ secrets.CONVEYOR_STORAGE_TOKEN }}
+  # Azure Storage Account info 
   CONVEYOR_STORAGE_ACCOUNT_NAME: "$CONVEYOR_STORAGE_ACCOUNT_NAME"
   CONVEYOR_STORAGE_CONTAINER_NAME: "$CONVEYOR_STORAGE_CONTAINER_NAME" 
+
+  GITHUB_TOKEN: ${{ github.token }}
 ...
 
 jobs:
@@ -179,7 +183,7 @@ jobs:
             --project-name "$GITHUB_REPOSITORY" \
             --job-name sbom-stage \ 
             --provider-api-url "https://api.github.com" \
-            --provider-token "${CONVEYOR_PROVIDER_TOKEN}" \
+            --provider-token "${GITHUB_TOKEN}" \
             --provider-type "github" \
             --ref-name "$GITHUB_REF_NAME" \
             --storage-token "${CONVEYOR_STORAGE_TOKEN}" \
