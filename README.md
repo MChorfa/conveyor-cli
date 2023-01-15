@@ -146,10 +146,10 @@ conveyor:
 ```yaml
 env:
   # see: [secrets](https://docs.github.com/en/actions/security-guides/encrypted-secrets)
-  # Personal Access Token  | personal use only, recommended to use GITHUB_TOKEN
+  # Personal Access Token  | personal use only outside the github actions, recommended to use GITHUB_TOKEN
   CONVEYOR_PROVIDER_TOKEN: ${{ secrets.CONVEYOR_PROVIDER_TOKEN }}
   CONVEYOR_STORAGE_TOKEN: ${{ secrets.CONVEYOR_STORAGE_TOKEN }}
-  # Azure Storage Account info 
+  # Azure Storage Account info stored in environment variables
   CONVEYOR_STORAGE_ACCOUNT_NAME: "$CONVEYOR_STORAGE_ACCOUNT_NAME"
   CONVEYOR_STORAGE_CONTAINER_NAME: "$CONVEYOR_STORAGE_CONTAINER_NAME" 
   # Internal Github Token valid only during the workflow lifecycle
@@ -177,17 +177,17 @@ jobs:
           run: |
             conveyor-cli conveyor \
             --commit-hash "$GITHUB_SHA" \
-            --owner-name "$GITHUB_REPOSITORY_OWNER" \
+            --ref-name "$GITHUB_REF_NAME" \
             --pipeline-id $GITHUB_RUN_ID \
             --project-id $GITHUB_REPOSITORY_ID \
-            --project-name "$GITHUB_REPOSITORY" \
+            --project-name "conveyor-cli" \
+            --owner-name "$GITHUB_REPOSITORY_OWNER" \
             --job-name sbom-stage \ 
             --provider-api-url "https://api.github.com" \
-            --provider-token "$GITHUB_TOKEN" \
+            --provider-token "${GITHUB_TOKEN}" \
             --provider-type "github" \
-            --ref-name "$GITHUB_REF_NAME" \
-            --storage-token "$CONVEYOR_STORAGE_TOKEN" \
             --storage-type "azure" \
-            --storage-account-name "$CONVEYOR_STORAGE_ACCOUNT_NAME" \
-            --storage-container-name "$CONVEYOR_STORAGE_CONTAINER_NAME"
+            --storage-token "$CONVEYOR_STORAGE_TOKEN}" \
+            --storage-account-name "${CONVEYOR_STORAGE_ACCOUNT_NAME}" \
+            --storage-container-name "${CONVEYOR_STORAGE_CONTAINER_NAME}"
 ```

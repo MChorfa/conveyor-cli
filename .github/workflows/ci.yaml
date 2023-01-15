@@ -18,10 +18,8 @@ concurrency:
 
 env:
   GRYPE_MATCH_GOLANG_USING_CPES: false
-  # Personal Access Token  
-  CONVEYOR_PROVIDER_TOKEN: ${{ secrets.CONVEYOR_PROVIDER_TOKEN }}
-  CONVEYOR_STORAGE_TOKEN: "$CONVEYOR_STORAGE_TOKEN"
-  CONVEYOR_STORAGE_ACCOUNT_NAME: ${{ secrets.CONVEYOR_STORAGE_ACCOUNT_NAME }}
+  CONVEYOR_STORAGE_TOKEN: ${{ secrets.CONVEYOR_STORAGE_TOKEN }}"
+  CONVEYOR_STORAGE_ACCOUNT_NAME: "$CONVEYOR_STORAGE_ACCOUNT_NAME"
   CONVEYOR_STORAGE_CONTAINER_NAME: "$CONVEYOR_STORAGE_CONTAINER_NAME" 
   GITHUB_TOKEN: ${{ github.token }}
 
@@ -86,16 +84,16 @@ jobs:
           run: |
             conveyor-cli conveyor \
             --commit-hash "$GITHUB_SHA" \
-            --owner-name "$GITHUB_REPOSITORY_OWNER" \
+            --ref-name "$GITHUB_REF_NAME" \
             --pipeline-id $GITHUB_RUN_ID \
             --project-id $GITHUB_REPOSITORY_ID \
             --project-name "conveyor-cli" \
+            --owner-name "$GITHUB_REPOSITORY_OWNER" \
             --job-name sbom-stage \
             --provider-api-url "https://api.github.com" \
             --provider-token "${GITHUB_TOKEN}" \
             --provider-type "github" \
-            --ref-name "$GITHUB_REF_NAME" \
-            --storage-token "${CONVEYOR_STORAGE_TOKEN}" \
             --storage-type "azure" \
+            --storage-token "$CONVEYOR_STORAGE_TOKEN}" \
             --storage-account-name "${CONVEYOR_STORAGE_ACCOUNT_NAME}" \
             --storage-container-name "${CONVEYOR_STORAGE_CONTAINER_NAME}"
