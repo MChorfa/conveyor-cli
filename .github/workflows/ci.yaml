@@ -35,7 +35,7 @@ jobs:
             go-version-file: go.mod
             cache: true
         
-        - name: build
+        - name: Build
           run: go run mage.go build
         
         - name: Create SBOM
@@ -52,13 +52,18 @@ jobs:
             output-format: json
             fail-build: high
             severity-cutoff: high
-            
-        - name: upload-artifacts
+
+        - name: Upload Scan SARIF Report
+          uses: github/codeql-action/upload-sarif@v2
+          with:
+            sarif_file: ${{ steps.scan.outputs.sarif }}
+
+        - name: Upload Artifacts
           uses: actions/upload-artifact@v3
           with:
             name: sbom-stage
             path: |
-              "/tmp/sbom-action-*/conveyor-cli-sbom-stage.spdx.json"
+              /tmp/sbom-action-*/*
 
 
 
