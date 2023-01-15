@@ -152,7 +152,7 @@ env:
   # Azure Storage Account info 
   CONVEYOR_STORAGE_ACCOUNT_NAME: "$CONVEYOR_STORAGE_ACCOUNT_NAME"
   CONVEYOR_STORAGE_CONTAINER_NAME: "$CONVEYOR_STORAGE_CONTAINER_NAME" 
-
+  # Internal Github Token valid only during the workflow lifecycle
   GITHUB_TOKEN: ${{ github.token }}
 ...
 
@@ -183,11 +183,11 @@ jobs:
             --project-name "$GITHUB_REPOSITORY" \
             --job-name sbom-stage \ 
             --provider-api-url "https://api.github.com" \
-            --provider-token "${GITHUB_TOKEN}" \
+            --provider-token "$GITHUB_TOKEN" \
             --provider-type "github" \
             --ref-name "$GITHUB_REF_NAME" \
-            --storage-token "${CONVEYOR_STORAGE_TOKEN}" \
+            --storage-token "$CONVEYOR_STORAGE_TOKEN" \
             --storage-type "azure" \
-            --storage-account-name "${CONVEYOR_STORAGE_ACCOUNT_NAME}" \
-            --storage-container-name "${CONVEYOR_STORAGE_CONTAINER_NAME}"
+            --storage-account-name "$CONVEYOR_STORAGE_ACCOUNT_NAME" \
+            --storage-container-name "$CONVEYOR_STORAGE_CONTAINER_NAME"
 ```
