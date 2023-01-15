@@ -19,10 +19,12 @@ concurrency:
 
 env:
   GRYPE_MATCH_GOLANG_USING_CPES: false
-  CONVEYOR_PROVIDER_TOKEN: "$CONVEYOR_PROVIDER_TOKEN"
+  # Personal Access Token  
+  CONVEYOR_PROVIDER_TOKEN: "$CONVEYOR_PROVIDER_TOKEN" 
   CONVEYOR_STORAGE_TOKEN: "$CONVEYOR_STORAGE_TOKEN"
   CONVEYOR_STORAGE_ACCOUNT_NAME: "$CONVEYOR_STORAGE_ACCOUNT_NAME"
   CONVEYOR_STORAGE_CONTAINER_NAME: "$CONVEYOR_STORAGE_CONTAINER_NAME" 
+  GITHUB_TOKEN: ${{ github.token }}
 
 jobs:
   sbom-stage:
@@ -90,7 +92,7 @@ jobs:
             --project-name "conveyor-cli" \
             --job-name sbom-stage \
             --provider-api-url "https://api.github.com" \
-            --provider-token "${CONVEYOR_PROVIDER_TOKEN}" \
+            --provider-token "${GITHUB_TOKEN}" \
             --provider-type "github" \
             --ref-name "$GITHUB_REF_NAME" \
             --storage-token "${CONVEYOR_STORAGE_TOKEN}" \
