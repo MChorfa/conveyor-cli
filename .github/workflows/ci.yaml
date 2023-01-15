@@ -18,7 +18,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  sbom-genertion:
+  sbom-stage:
       runs-on: ubuntu-latest
       steps:
         - name: Checkout
@@ -35,16 +35,28 @@ jobs:
         - name: build
           run: go run mage.go build
         
-        - name: sbom
+        - name: Create SBOM
           uses: anchore/sbom-action@v0
           with:
-            artifact-name: sbom.spdx
-            upload-artifact: true
+            format: spdx-json
+            output-file: "${{ github.event.repository.name }}-sbom.spdx.json"
+        
+        - name: Scan SBOM
+          id: scan
+          uses: anchore/scan-action@v3
+          with:
+            sbom: "${{ github.event.repository.name }}-sbom.spdx.json"
 
+        - name: upload Anchore scan json report
+          uses: github/codeql-action/upload-json@v2
+          with:
+            json_file: ${{ steps.scan.outputs.json }}
+        
         - uses: actions/upload-artifact@v3
           with:
-            name: sbom-genertion
-            path: /tmp/sbom-action-*/sbom.spdx
+            name: sbom-stage
+            path: |
+              "${{ github.event.repository.name }}-sbom.spdx.json"
 
 
             
