@@ -126,7 +126,7 @@ conveyor:
       conveyor-cli conveyor \
       --commit-hash "$CI_COMMIT_SHA" \
       --owner-name "$CI_COMMIT_AUTHOR" \
-      --pipeline-run-id $CI_PIPELINE_ID \
+      --pipeline-id $CI_PIPELINE_ID \
       --project-id $CI_PROJECT_ID \
       --project-name "$CI_PROJECT_NAME" \
       --job-name semgrep-sast \
