@@ -40,12 +40,14 @@ jobs:
         
         - name: Build
           run: go run mage.go build
+        
         # see: https://github.com/anchore/sbom-action
         - name: Create SBOM
           uses: anchore/sbom-action@v0
           with:
             format: spdx-json
             output-file: "${{ github.event.repository.name }}-sbom.spdx.json"
+        
         # see: https://github.com/anchore/scan-action
         - name: Scan SBOM
           id: scan
@@ -63,6 +65,35 @@ jobs:
             path: |
               /tmp/sbom-action-*/*
 
+  # see: https://semgrep.dev/docs/semgrep-ci/sample-ci-configs/#sample-github-actions-configuration-file
+  semgrep:
+    # User-definable name of this GitHub Actions job:
+    name: semgrep-scan
+    # If you are self-hosting, change the following `runs-on` value: 
+    runs-on: ubuntu-latest
+
+    container:
+      # A Docker image with Semgrep installed. Do not change this.
+      image: returntocorp/semgrep
+
+    # Skip any PR created by dependabot to avoid permission issues:
+    if: (github.actor != 'dependabot[bot]')
+
+    steps:
+      # Fetch project source with GitHub Actions Checkout.
+      - uses: actions/checkout@v3
+      # Run the "semgrep ci" command on the command line of the docker image.
+      - run: semgrep ci --sarif --output=semgrep.sarif
+        env:
+           # Add the rules that Semgrep uses by setting the SEMGREP_RULES environment variable. 
+           SEMGREP_RULES: p/default # more at semgrep.dev/explore
+
+      - name: Upload SARIF file for GitHub Advanced Security Dashboard
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: semgrep.sarif
+        if: always()
+  
   conveyor:
       needs: ["sbom-stage"]
       runs-on: ubuntu-latest
