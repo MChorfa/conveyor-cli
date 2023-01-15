@@ -40,7 +40,6 @@ jobs:
           with:
             path: "."
             artifact-name: sbom.spdx
-            output-file: "."
             upload-artifact: true
 
         - uses: actions/upload-artifact@v3
