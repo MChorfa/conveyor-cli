@@ -9,7 +9,6 @@ on:
 
 permissions:
   contents: read
-  # Needed for the 'trilom/file-changes-action' action
   pull-requests: read
 
 # This allows a subsequently queued workflow run to interrupt previous runs
@@ -67,6 +66,7 @@ jobs:
               /tmp/sbom-action-*/*
 
   conveyor:
+      needs: ["sbom-stage"]
       runs-on: ubuntu-latest
       steps:
         - name: Checkout
