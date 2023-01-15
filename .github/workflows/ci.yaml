@@ -50,11 +50,13 @@ jobs:
             fail-build: high
             severity-cutoff: high
             
-        - uses: actions/upload-artifact@v3
+        - name: upload-artifacts
+          uses: actions/upload-artifact@v3
           with:
             name: sbom-stage
             path: |
-              "${{ github.event.repository.name }}-sbom.spdx.json"
+              "/tmp/sbom-action-*/conveyor-cli-sbom-stage.spdx.json"
+              "/tmp/sbom-scan-*/*"
 
 
             
