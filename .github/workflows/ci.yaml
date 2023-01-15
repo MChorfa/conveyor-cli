@@ -46,7 +46,10 @@ jobs:
           uses: anchore/scan-action@v3
           with:
             sbom: "${{ github.event.repository.name }}-sbom.spdx.json"
-
+            output-format: json
+            fail-build: high
+            severity-cutoff: high
+            
         - uses: actions/upload-artifact@v3
           with:
             name: sbom-stage
