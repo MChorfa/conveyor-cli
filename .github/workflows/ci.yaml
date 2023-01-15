@@ -20,8 +20,8 @@ env:
   GRYPE_MATCH_GOLANG_USING_CPES: false
   GITHUB_TOKEN: ${{ github.token }}
   CONVEYOR_STORAGE_TOKEN: ${{ secrets.CONVEYOR_STORAGE_TOKEN }}
-  CONVEYOR_STORAGE_ACCOUNT_NAME: "$CONVEYOR_STORAGE_ACCOUNT_NAME"
-  CONVEYOR_STORAGE_CONTAINER_NAME: "$CONVEYOR_STORAGE_CONTAINER_NAME" 
+  CONVEYOR_STORAGE_ACCOUNT_NAME: ${{ env.CONVEYOR_STORAGE_ACCOUNT_NAME }}
+  CONVEYOR_STORAGE_CONTAINER_NAME: ${{ env.CONVEYOR_STORAGE_CONTAINER_NAME }}
 
 jobs:
   sbom-stage:
@@ -40,13 +40,13 @@ jobs:
         
         - name: Build
           run: go run mage.go build
-        
+        # see: https://github.com/anchore/sbom-action
         - name: Create SBOM
           uses: anchore/sbom-action@v0
           with:
             format: spdx-json
             output-file: "${{ github.event.repository.name }}-sbom.spdx.json"
-        
+        # see: https://github.com/anchore/scan-action
         - name: Scan SBOM
           id: scan
           uses: anchore/scan-action@v3
@@ -55,7 +55,7 @@ jobs:
             output-format: json
             fail-build: high
             severity-cutoff: high
-
+        # see: https://github.com/actions/upload-artifact
         - name: Upload Artifacts
           uses: actions/upload-artifact@v3
           with:
@@ -79,7 +79,7 @@ jobs:
         
         - name: Get Conveyor
           run: go install github.com/MChorfa/conveyor-cli@latest
-
+        # see: https://github.com/MChorfa/conveyor-cli
         - name: Run Conveyor
           run: |
             conveyor-cli conveyor \

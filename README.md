@@ -151,12 +151,15 @@ env:
   # see: [secrets](https://docs.github.com/en/actions/security-guides/encrypted-secrets)
   # Personal Access Token  | personal use only outside the github actions, recommended to use GITHUB_TOKEN
   CONVEYOR_PROVIDER_TOKEN: ${{ secrets.CONVEYOR_PROVIDER_TOKEN }}
-  # Azure Storage Account info stored in environment variables
-  CONVEYOR_STORAGE_ACCOUNT_NAME: "$CONVEYOR_STORAGE_ACCOUNT_NAME"
-  CONVEYOR_STORAGE_CONTAINER_NAME: "$CONVEYOR_STORAGE_CONTAINER_NAME"
-  CONVEYOR_STORAGE_TOKEN: ${{ secrets.CONVEYOR_STORAGE_TOKEN }} 
   # Internal Github Token valid only during the workflow lifecycle
   GITHUB_TOKEN: ${{ github.token }}
+  # see: https://docs.github.com/en/actions/learn-github-actions/variables
+  # Azure Storage Account info stored in environment variables
+  CONVEYOR_STORAGE_ACCOUNT_NAME: ${{ env.CONVEYOR_STORAGE_ACCOUNT_NAME }}
+  CONVEYOR_STORAGE_CONTAINER_NAME: ${{ env.CONVEYOR_STORAGE_CONTAINER_NAME }}
+  # Azure Storage Account token info stored in secrets
+  CONVEYOR_STORAGE_TOKEN: ${{ secrets.CONVEYOR_STORAGE_TOKEN }} 
+
 ...
 
 jobs:
