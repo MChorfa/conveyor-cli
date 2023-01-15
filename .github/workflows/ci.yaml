@@ -78,7 +78,7 @@ jobs:
             go-version: '>=1.19'
         
         - name: Get Conveyor
-          run: go install github.com/MChorfa/conveyor-cli@latest
+          run: go install github.com/MChorfa/conveyor-cli@v0.0.2-alpha
 
         - name: Run Conveyor
           run: |
