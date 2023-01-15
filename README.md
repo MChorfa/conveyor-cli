@@ -109,6 +109,9 @@ stages:
 ...
 
 conveyor:
+  # Conveyor need all prior jobs in the workflow to be done before running.
+  # For example here, we need the semgrep report to be generated in semgrep-sast
+  needs: ["semgrep-sast"]
   variables:
     CONVEYOR_PROVIDER_TOKEN: "$CONVEYOR_PROVIDER_TOKEN"
     CONVEYOR_STORAGE_TOKEN: "$CONVEYOR_STORAGE_TOKEN"
@@ -148,16 +151,19 @@ env:
   # see: [secrets](https://docs.github.com/en/actions/security-guides/encrypted-secrets)
   # Personal Access Token  | personal use only outside the github actions, recommended to use GITHUB_TOKEN
   CONVEYOR_PROVIDER_TOKEN: ${{ secrets.CONVEYOR_PROVIDER_TOKEN }}
-  CONVEYOR_STORAGE_TOKEN: ${{ secrets.CONVEYOR_STORAGE_TOKEN }}
   # Azure Storage Account info stored in environment variables
   CONVEYOR_STORAGE_ACCOUNT_NAME: "$CONVEYOR_STORAGE_ACCOUNT_NAME"
-  CONVEYOR_STORAGE_CONTAINER_NAME: "$CONVEYOR_STORAGE_CONTAINER_NAME" 
+  CONVEYOR_STORAGE_CONTAINER_NAME: "$CONVEYOR_STORAGE_CONTAINER_NAME"
+  CONVEYOR_STORAGE_TOKEN: ${{ secrets.CONVEYOR_STORAGE_TOKEN }} 
   # Internal Github Token valid only during the workflow lifecycle
   GITHUB_TOKEN: ${{ github.token }}
 ...
 
 jobs:
   conveyor:
+      # Conveyor need all prior jobs in the workflow to be done before running.
+      # For example here, we need the sbom to be generated in sbom-stage
+      needs: ["sbom-stage"]
       runs-on: ubuntu-latest
       steps:
         - name: Checkout
@@ -187,7 +193,7 @@ jobs:
             --provider-token "${GITHUB_TOKEN}" \
             --provider-type "github" \
             --storage-type "azure" \
-            --storage-token "$CONVEYOR_STORAGE_TOKEN}" \
+            --storage-token "${CONVEYOR_STORAGE_TOKEN}" \
             --storage-account-name "${CONVEYOR_STORAGE_ACCOUNT_NAME}" \
             --storage-container-name "${CONVEYOR_STORAGE_CONTAINER_NAME}"
 ```

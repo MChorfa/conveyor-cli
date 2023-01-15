@@ -18,10 +18,10 @@ concurrency:
 
 env:
   GRYPE_MATCH_GOLANG_USING_CPES: false
-  CONVEYOR_STORAGE_TOKEN: ${{ secrets.CONVEYOR_STORAGE_TOKEN }}"
+  GITHUB_TOKEN: ${{ github.token }}
+  CONVEYOR_STORAGE_TOKEN: ${{ secrets.CONVEYOR_STORAGE_TOKEN }}
   CONVEYOR_STORAGE_ACCOUNT_NAME: "$CONVEYOR_STORAGE_ACCOUNT_NAME"
   CONVEYOR_STORAGE_CONTAINER_NAME: "$CONVEYOR_STORAGE_CONTAINER_NAME" 
-  GITHUB_TOKEN: ${{ github.token }}
 
 jobs:
   sbom-stage:
@@ -94,6 +94,6 @@ jobs:
             --provider-token "${GITHUB_TOKEN}" \
             --provider-type "github" \
             --storage-type "azure" \
-            --storage-token "$CONVEYOR_STORAGE_TOKEN}" \
+            --storage-token "${CONVEYOR_STORAGE_TOKEN}" \
             --storage-account-name "${CONVEYOR_STORAGE_ACCOUNT_NAME}" \
             --storage-container-name "${CONVEYOR_STORAGE_CONTAINER_NAME}"
