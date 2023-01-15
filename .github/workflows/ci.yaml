@@ -87,7 +87,7 @@ jobs:
             --owner-name "$GITHUB_REPOSITORY_OWNER" \
             --pipeline-id $GITHUB_RUN_ID \
             --project-id $GITHUB_REPOSITORY_ID \
-            --project-name "$GITHUB_REPOSITORY" \
+            --project-name "conveyor-cli" \
             --job-name sbom-stage \
             --provider-api-url "https://api.github.com" \
             --provider-token "${CONVEYOR_PROVIDER_TOKEN}" \
