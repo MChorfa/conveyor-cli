@@ -96,3 +96,46 @@ git tag -a v0.0.1-alpha -m "Alpha pre-release"
 git push origin --tags
 goreleaser release --rm-dist
 ```
+
+
+## CI Examples
+
+### Gitlabci
+
+```yaml
+
+conveyor:
+  variables:
+    CONVEYOR_PROVIDER_TOKEN: "$CONVEYOR_PROVIDER_TOKEN"
+    CONVEYOR_STORAGE_TOKEN: "$CONVEYOR_STORAGE_TOKEN"
+    CONVEYOR_STORAGE_ACCOUNT_NAME: "$CONVEYOR_STORAGE_ACCOUNT_NAME"
+    CONVEYOR_STORAGE_CONTAINER_NAME: "$CONVEYOR_STORAGE_CONTAINER_NAME"    
+  stage: conveyor
+  tags:
+    - YOUR_TAG
+
+  image: golang:1.19.5
+  script:
+    - echo "run conveyor"
+    - go install github.com/MChorfa/conveyor-cli@latest
+    - | 
+      conveyor-cli conveyor \
+      --commit-hash "$CI_COMMIT_SHA" \
+      --owner-name "$CI_COMMIT_AUTHOR" \
+      --pipeline-run-id $CI_PIPELINE_ID \
+      --project-id $CI_PROJECT_ID \
+      --project-name "$CI_PROJECT_NAME" \
+      --stage-job-name semgrep-sast \
+      --provider-api-url "$CI_API_V4_URL" \
+      --provider-token "${CONVEYOR_PROVIDER_TOKEN}" \
+      --provider-type "gitlab" \
+      --ref-name "$CI_COMMIT_REF_NAME" \
+      --storage-token "${CONVEYOR_STORAGE_TOKEN}" \
+      --storage-type "azure" \
+      --storage-account-name "${CONVEYOR_STORAGE_ACCOUNT_NAME}" \
+      --storage-container-name "${CONVEYOR_STORAGE_CONTAINER_NAME}"
+
+```
+
+
+### GithubAction
