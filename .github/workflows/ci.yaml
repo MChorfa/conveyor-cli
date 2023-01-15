@@ -35,15 +35,14 @@ jobs:
         - name: build
           run: go run mage.go build
         
-        - name: sbom-genertion
+        - name: sbom
           uses: anchore/sbom-action@v0
           with:
+            path: "."
             artifact-name: sbom.spdx
-        - run: |
-            mkdir -p ${{ github.workspace }}/artifact
-            cp sbom.spdx ${{ github.workspace }}/artifact/
+            output-file: "."
+            upload-artifact: true
 
         - uses: actions/upload-artifact@v3
           with:
             name: sbom-genertion
-            path: ${{ github.workspace }}/artifact/**/*
