@@ -18,6 +18,8 @@ concurrency:
 
 env:
   GRYPE_MATCH_GOLANG_USING_CPES: false
+  # Setting an environment variable with the value of a configuration variable
+  env_var: ${{ vars.ENV_CONTEXT_VAR }}
 
 jobs:
   sbom-stage:
@@ -124,4 +126,4 @@ jobs:
             --storage-type "azure" \
             --storage-token "${{ secrets.CONVEYOR_STORAGE_TOKEN }}" \
             --storage-account-name "${{ vars.CONVEYOR_STORAGE_ACCOUNT_NAME }}" \
-            --storage-container-name "{{ vars.CONVEYOR_STORAGE_CONTAINER_NAME }}"
+            --storage-container-name "${{ vars.CONVEYOR_STORAGE_CONTAINER_NAME }}"
