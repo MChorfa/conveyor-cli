@@ -18,10 +18,6 @@ concurrency:
 
 env:
   GRYPE_MATCH_GOLANG_USING_CPES: false
-  GITHUB_TOKEN: ${{ github.token }}
-  CONVEYOR_STORAGE_TOKEN: ${{ secrets.CONVEYOR_STORAGE_TOKEN }}
-  CONVEYOR_STORAGE_ACCOUNT_NAME: ${{ env.CONVEYOR_STORAGE_ACCOUNT_NAME }}
-  CONVEYOR_STORAGE_CONTAINER_NAME: ${{ env.CONVEYOR_STORAGE_CONTAINER_NAME }}
 
 jobs:
   sbom-stage:
@@ -68,7 +64,7 @@ jobs:
   # see: https://semgrep.dev/docs/semgrep-ci/sample-ci-configs/#sample-github-actions-configuration-file
   semgrep:
     # User-definable name of this GitHub Actions job:
-    name: semgrep-scan
+    name: semgrep
     # If you are self-hosting, change the following `runs-on` value: 
     runs-on: ubuntu-latest
 
@@ -95,7 +91,7 @@ jobs:
         if: always()
   
   conveyor:
-      needs: ["sbom-stage"]
+      needs: ["sbom-stage", "semgrep"]
       runs-on: ubuntu-latest
       steps:
         - name: Checkout
@@ -121,10 +117,11 @@ jobs:
             --project-name "conveyor-cli" \
             --owner-name "$GITHUB_REPOSITORY_OWNER" \
             --job-name sbom-stage \
+            --job-name semgrep \
             --provider-api-url "https://api.github.com" \
-            --provider-token "${GITHUB_TOKEN}" \
+            --provider-token "${{ github.token }}" \
             --provider-type "github" \
             --storage-type "azure" \
-            --storage-token "${CONVEYOR_STORAGE_TOKEN}" \
-            --storage-account-name "${CONVEYOR_STORAGE_ACCOUNT_NAME}" \
-            --storage-container-name "${CONVEYOR_STORAGE_CONTAINER_NAME}"
+            --storage-token "${{ secrets.CONVEYOR_STORAGE_TOKEN }}" \
+            --storage-account-name "${{ vars.CONVEYOR_STORAGE_ACCOUNT_NAME }}" \
+            --storage-container-name "{{ vars.CONVEYOR_STORAGE_CONTAINER_NAME }}"
