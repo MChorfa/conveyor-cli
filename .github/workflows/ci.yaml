@@ -19,7 +19,9 @@ concurrency:
 env:
   GRYPE_MATCH_GOLANG_USING_CPES: false
   # Setting an environment variable with the value of a configuration variable
-  env_var: ${{ vars.ENV_CONTEXT_VAR }}
+  CONVEYOR_STORAGE_TOKEN: ${{ secrets.CONVEYOR_STORAGE_TOKEN }}
+  CONVEYOR_STORAGE_ACCOUNT_NAME: ${{ vars.CONVEYOR_STORAGE_ACCOUNT_NAME }}
+  CONVEYOR_STORAGE_CONTAINER_NAME: ${{ vars.CONVEYOR_STORAGE_CONTAINER_NAME }}
 
 jobs:
   sbom-stage:
@@ -86,6 +88,13 @@ jobs:
            # Add the rules that Semgrep uses by setting the SEMGREP_RULES environment variable. 
            SEMGREP_RULES: p/default # more at semgrep.dev/explore
 
+      # see: https://github.com/actions/upload-artifact
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: semgrep
+          path: semgrep.sarif
+
       # - name: Upload SARIF file for GitHub Advanced Security Dashboard
       #   uses: github/codeql-action/upload-sarif@v2
       #   with:
@@ -124,6 +133,6 @@ jobs:
             --provider-token "${{ github.token }}" \
             --provider-type "github" \
             --storage-type "azure" \
-            --storage-token "${{ secrets.CONVEYOR_STORAGE_TOKEN }}" \
-            --storage-account-name "${{ vars.CONVEYOR_STORAGE_ACCOUNT_NAME }}" \
-            --storage-container-name "${{ vars.CONVEYOR_STORAGE_CONTAINER_NAME }}"
+            --storage-token "${{ env.CONVEYOR_STORAGE_TOKEN }}" \
+            --storage-account-name "${{ env.CONVEYOR_STORAGE_ACCOUNT_NAME }}" \
+            --storage-container-name "${{ env.CONVEYOR_STORAGE_CONTAINER_NAME }}"

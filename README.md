@@ -153,11 +153,11 @@ env:
   CONVEYOR_PROVIDER_TOKEN: ${{ secrets.CONVEYOR_PROVIDER_TOKEN }}
   # Internal Github Token valid only during the workflow lifecycle
   GITHUB_TOKEN: ${{ github.token }}
-  # Azure Storage Account token info stored in Environment secrets
-  CONVEYOR_STORAGE_TOKEN: ${{ secrets.CONVEYOR_STORAGE_TOKEN }} 
   # See: https://docs.github.com/en/actions/learn-github-actions/contexts#vars-context
   # Setting an environment variable with the value of a configuration variable
-  env_var: ${{ vars.ENV_CONTEXT_VAR }}
+  CONVEYOR_STORAGE_TOKEN: ${{ secrets.CONVEYOR_STORAGE_TOKEN }}
+  CONVEYOR_STORAGE_ACCOUNT_NAME: ${{ vars.CONVEYOR_STORAGE_ACCOUNT_NAME }}
+  CONVEYOR_STORAGE_CONTAINER_NAME: ${{ vars.CONVEYOR_STORAGE_CONTAINER_NAME }}
 
 ...
 
@@ -195,7 +195,7 @@ jobs:
             --provider-token "${{ github.token }}" \
             --provider-type "github" \
             --storage-type "azure" \
-            --storage-token "${{ secrets.CONVEYOR_STORAGE_TOKEN }}" \
-            --storage-account-name "${{ vars.CONVEYOR_STORAGE_ACCOUNT_NAME }}" \
-            --storage-container-name "{{ vars.CONVEYOR_STORAGE_CONTAINER_NAME }}"
+            --storage-token "${{ env.CONVEYOR_STORAGE_TOKEN }}" \
+            --storage-account-name "${{ env.CONVEYOR_STORAGE_ACCOUNT_NAME }}" \
+            --storage-container-name "${{ env.CONVEYOR_STORAGE_CONTAINER_NAME }}"
 ```
