@@ -100,7 +100,13 @@ goreleaser release --rm-dist
 
 ## CI Examples
 
-### Gitlabci
+### GitLab CI/CD
+
+To add a Conveyor configuration snippet in your GitLab CI/CD pipeline:
+
+1. Create or edit your `.gitlab-ci.yml` file in the repository.
+2. Copy the relevant code snippet into your `.gitlab-ci.yml` file.
+3. Commit the updated .gitlab-ci.yml file.
 
 ```yaml
 
@@ -113,6 +119,9 @@ conveyor:
   # For example here, we need the semgrep report to be generated in semgrep-sast
   needs: ["semgrep-sast"]
   variables:
+    # Use Project Access Tokens instead of Personal Access Token
+    # see: https://docs.gitlab.com/ee/user/project/settings/project_access_tokens.html#project-access-tokens
+    # see: https://microfluidics.utoronto.ca/gitlab/help/user/project/settings/project_access_tokens.md
     CONVEYOR_PROVIDER_TOKEN: "$CONVEYOR_PROVIDER_TOKEN"
     CONVEYOR_STORAGE_TOKEN: "$CONVEYOR_STORAGE_TOKEN"
     CONVEYOR_STORAGE_ACCOUNT_NAME: "$CONVEYOR_STORAGE_ACCOUNT_NAME"
@@ -144,7 +153,14 @@ conveyor:
 
 ```
 
-### GithubAction
+### GitHub Actions
+
+To add a Conveyor configuration file in your GitHub Actions pipeline:
+
+1. Create a Conveyor.yml file in .github/workflows in the repository you want to scan.
+1. Copy the relevant code snippet provided in Sample GitHub Actions configuration file.
+1. Paste the relevant code snippet to Conveyor.yml file. This is your Conveyor configuration file for GitHub Actions.
+1. Commit the configuration file under /REPOSITORY-ROOT-DIRECTORY/.github/workflows/Conveyor.yml.
 
 ```yaml
 env:

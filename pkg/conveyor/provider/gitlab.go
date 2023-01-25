@@ -1,6 +1,7 @@
 package provider
 
 import (
+	"fmt"
 	"strings"
 
 	"github.com/MChorfa/conveyor-cli/pkg/conveyor/types"
@@ -41,16 +42,19 @@ func (cGitlab *CGitlab) GetArtifacts() []*types.Artifact {
 					// GET /projects/:id/jobs/artifacts/:ref_name/download?job=name
 					optDownloadArtifactsFileOptions := &gitlab.DownloadArtifactsFileOptions{Job: &job.Name}
 					artifactBuf, _, err := client.Jobs.DownloadArtifactsFile(projectID, refName, optDownloadArtifactsFileOptions)
-					handleError(err)
-					cGitlab.Artifacts = append(cGitlab.Artifacts, &types.Artifact{
-						Id:      job.ID,
-						Name:    job.Name,
-						Payload: artifactBuf,
-					})
+					if err != nil {
+						fmt.Printf("The requested job %s do not seems to have an artifact attached to it. \nPlease make sure the artifact section is configured within your pipeline \nERROR: %v", jobName, err.Error())
+					} else {
+						cGitlab.Artifacts = append(cGitlab.Artifacts, &types.Artifact{
+							Id:      job.ID,
+							Name:    job.Name,
+							Payload: artifactBuf,
+						})
+					}
 				}
 			}
 		}
 	}
-
+	fmt.Printf("\nConveyor collected %d artifacts from the pipeline", len(cGitlab.Artifacts))
 	return cGitlab.Artifacts
 }

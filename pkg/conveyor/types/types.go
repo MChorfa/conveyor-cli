@@ -15,6 +15,20 @@ type Artifact struct {
 	CreatedAt time.Time
 }
 
+type ArtifactMetadata struct {
+	Id           int       `json:"id" yaml:"id"`
+	Name         string    `json:"name" yaml:"name"`
+	Nonce        string    `json:"nonce" yaml:"nonce"`
+	CreatedAt    time.Time `json:"createAt" yaml:"createAt"`
+	PipelineID   int       `json:"pipelineID" yaml:"pipelineID"`
+	PipelineName string    `json:"pipelineName" yaml:"pipelineName"`
+	ProjectID    int       `json:"projectID" yaml:"projectID"`
+	ProjectName  string    `json:"projectName" yaml:"projectName"`
+	RefName      string    `json:"refName" yaml:"refName"`
+	OwnerName    string    `json:"ownerName,omitempty" yaml:"ownerName,omitempty"`
+	CommitHash   string    `json:"commitHash" yaml:"commitHash"`
+}
+
 // TracingSpec defines Tracing configurations.
 type TracingSpec struct {
 	SamplingRate string     `json:"samplingRate" yaml:"samplingRate"`

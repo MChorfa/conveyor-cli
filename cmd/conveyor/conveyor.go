@@ -16,7 +16,7 @@ import (
 )
 
 var (
-	version                    = "v0.0.1-alpha"
+	version                    = "v0.0.2-alpha"
 	name                       = "conveyor"
 	defaultConfigFilename      = "conveyor.yaml"
 	envPrefix                  = "CONVEYOR"
@@ -94,7 +94,7 @@ func NewRootCommand() *cobra.Command {
 					StorageAccountName:   storageAccountName,
 					StorageContainerName: storageContainerName,
 				})
-			err := handleConveyrCmd(config)
+			err := handleConveyorCmd(config)
 			if err != nil {
 				fmt.Printf("%v", err)
 			}
@@ -121,7 +121,7 @@ func NewRootCommand() *cobra.Command {
 	return rootCmd
 }
 
-func handleConveyrCmd(cfg *types.Configuration) error {
+func handleConveyorCmd(cfg *types.Configuration) error {
 
 	conveyor := &conveyor.Conveyor{
 		ID:            uuid.New(),

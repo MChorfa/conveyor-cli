@@ -3,6 +3,7 @@ package provider
 import (
 	"bytes"
 	"context"
+	"fmt"
 	"io"
 	"net/http"
 	"strings"
@@ -55,24 +56,28 @@ func (cGithub *CGithub) GetArtifacts() []*types.Artifact {
 			for _, job := range workflowJobs.Jobs {
 				if strings.EqualFold(strings.ToLower(job.GetName()), strings.ToLower(jobName)) {
 					for _, workflowArtifact := range workflowArtifacts.Artifacts {
+
 						// GEt Download url
 						url, _, err := client.Actions.DownloadArtifact(ctx, ownerName, repoName, workflowArtifact.GetID(), true)
-						handleError(err)
+						if err != nil {
+							fmt.Printf("The requested job %s do not seems to have an url artifact attached to it. \nPlease make sure the artifact section is configured within your job \nERROR: %v", jobName, err.Error())
+						} else {
+							// Download the artifact
+							response, err := http.Get(url.String())
+							handleError(err)
+							// Read
+							artifactBuf, err := io.ReadAll(response.Body)
+							handleError(err)
 
-						// Download the artifact
-						response, err := http.Get(url.String())
-						handleError(err)
+							defer response.Body.Close()
 
-						artifactBuf, err := io.ReadAll(response.Body)
-						handleError(err)
+							cGithub.Artifacts = append(cGithub.Artifacts, &types.Artifact{
+								Id:      int(workflowArtifact.GetID()),
+								Name:    workflowArtifact.GetName(),
+								Payload: bytes.NewReader(artifactBuf),
+							})
+						}
 
-						defer response.Body.Close()
-
-						cGithub.Artifacts = append(cGithub.Artifacts, &types.Artifact{
-							Id:      int(workflowArtifact.GetID()),
-							Name:    workflowArtifact.GetName(),
-							Payload: bytes.NewReader(artifactBuf),
-						})
 					}
 				}
 
@@ -80,5 +85,6 @@ func (cGithub *CGithub) GetArtifacts() []*types.Artifact {
 
 		}
 	}
+	fmt.Printf("\nConveyor collected %d artifacts from the workflow", len(cGithub.Artifacts))
 	return cGithub.Artifacts
 }
